@@ -1,12 +1,14 @@
 #pragma once
 
 #include <cstdlib>
+#include <algorithm>
 
 template<typename T>
 class SimpleVector {
 public:
     SimpleVector();
     explicit SimpleVector(size_t size);
+    SimpleVector(const SimpleVector& rhs);
 
     ~SimpleVector();
 
@@ -45,6 +47,15 @@ SimpleVector<T>::SimpleVector(size_t size) :
         _capacity(size),
         _size(size)
 {
+}
+
+template<typename T>
+SimpleVector<T>::SimpleVector(const SimpleVector& rhs) :
+        _data(new T[rhs._capacity]),
+        _capacity(rhs._capacity),
+        _size(rhs._size)
+{
+    std::copy(rhs.begin(), rhs.end(), begin());
 }
 
 template<typename T>
