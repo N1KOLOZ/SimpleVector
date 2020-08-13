@@ -26,15 +26,17 @@ public:
     size_t Capacity() const;
 
     void PushBack(const T &value);
-
+    void PushBack(T &&value);
 private:
     T *_data;
     size_t _capacity;
     size_t _size;
+
+    void ExpandIfNeeded();
 };
 
 
-
+// definition
 template<typename T>
 SimpleVector<T>::SimpleVector() :
         _data(nullptr),
@@ -136,21 +138,28 @@ size_t SimpleVector<T>::Capacity() const {
 
 template<typename T>
 void SimpleVector<T>::PushBack(const T &value) {
+    ExpandIfNeeded();
+
+    _data[_size++] = value;
+}
+
+template<typename T>
+void SimpleVector<T>::PushBack(T &&value) {
+    ExpandIfNeeded();
+
+    _data[_size++] = std::move(value);
+}
+
+template<typename T>
+void SimpleVector<T>::ExpandIfNeeded() {
     if (_size == _capacity) {
         _capacity = _capacity == 0 ? 1 : 2 * _capacity;
 
         T *tmp_data = new T[_capacity];
-
-        for (int i = 0; i < _size; ++i) {
-            tmp_data[i] = _data[i];
-        }
+        std::move(begin(), end(), tmp_data);
 
         delete[] _data;
         _data = tmp_data;
     }
-
-    _data[_size] = value;
-    ++_size;
 }
-
 
