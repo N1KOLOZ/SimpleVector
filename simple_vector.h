@@ -9,6 +9,7 @@ public:
     SimpleVector();
     explicit SimpleVector(size_t size);
     SimpleVector(const SimpleVector& rhs);
+    void operator=(const SimpleVector& rhs);
 
     ~SimpleVector();
 
@@ -56,6 +57,18 @@ SimpleVector<T>::SimpleVector(const SimpleVector& rhs) :
         _size(rhs._size)
 {
     std::copy(rhs.begin(), rhs.end(), begin());
+}
+
+template<typename T>
+void SimpleVector<T>::operator=(const SimpleVector &rhs) {
+    if (rhs._size < _capacity) {
+        std::copy(rhs.begin(), rhs.end(), begin());
+    } else {
+        SimpleVector<T> tmp(rhs);
+        std::swap(tmp._data, _data);
+        std::swap(tmp._capacity, _capacity);
+        std::swap(tmp._size, _size);
+    }
 }
 
 template<typename T>
@@ -116,3 +129,4 @@ void SimpleVector<T>::PushBack(const T &value) {
     _data[_size] = value;
     ++_size;
 }
+
